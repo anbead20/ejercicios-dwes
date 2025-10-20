@@ -1,0 +1,58 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin-top: 50px;
+}
+
+form {
+    display: inline-block;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+select,
+input[type="number"],
+input[type="submit"] {
+    padding: 5px;
+    margin: 5px;
+}
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    border: 1px solid #000;
+}
+
+.domingo {
+    color: red;
+}
+
+.festivo-nacional {
+    color: darkred;
+    font-weight: bold;
+}
+
+.festivo-autonomico {
+    color: purple;
+    font-weight: bold;
+}
+
+.festivo-local {
+    color: orangered;
+    font-weight: bold;
+}
+
+a {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: inherit;
+}
