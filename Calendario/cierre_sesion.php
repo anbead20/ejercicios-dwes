@@ -6,6 +6,6 @@ session_unset();
 
 session_destroy();
 
-header("Location: calendario.php");
+header("Location: index.php");
 
 exit();

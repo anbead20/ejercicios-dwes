@@ -6,13 +6,29 @@ session_start();
 
 $mesActual = date('n');
 $anioActual = date('Y');
-$formulario1_enviado = $_SERVER['REQUEST_METHOD'] === 'POST';
 $fecha = isset($_GET['fecha']) ? $_GET['fecha'] : date('d-m-Y');
+$msgErrorTarea = "";
 
-if ($formulario1_enviado) {
-    $_SESSION['mes']  = clearData($_POST['mes']);
-    $_SESSION['anio'] = clearData($_POST['anio']);
+if (!isset($_SESSION['tareas'])) {
+    $_SESSION['tareas'] = array();
 }
+
+if (isset($_POST['nueva'])) {
+    if (empty($_POST['tarea'])) {
+        $msgErrorTarea = "<span>La tarea no puede estar vacía</span>";
+    } else {
+        $_SESSION['tareas'][] = array(
+            'fecha' => clearData($_POST['fecha']),
+            'tarea' => clearData($_POST['tarea'])
+        );
+    }
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['mes'], $_POST['anio'])) {
+    $_SESSION['mes']  = (int)($_POST['mes']);
+    $_SESSION['anio'] = (int)($_POST['anio']);
+}
+
 
 $nombresMes = [
     1 => 'Enero',
@@ -59,6 +75,8 @@ $festivosNacMes  = obtenerDiasFestivos($festivosNacionales, $mes);
 $festivosAutoMes = obtenerDiasFestivos($festivosAndalucia, $mes);
 $festivosLocMes  = obtenerDiasFestivos($festivosLocales, $mes);
 
+$tareas = $_SESSION['tareas'];
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -74,8 +92,8 @@ $festivosLocMes  = obtenerDiasFestivos($festivosLocales, $mes);
 
 <body>
     <h1>Selecciona Mes y Año</h1>
-    <form method="post" action="<?= $_SERVER['PHP_SELF'] ?>">
-        <label for=" mes">Mes:</label>
+    <form method="post" action="<?= htmlspecialchars($_SERVER['PHP_SELF']) ?>">
+        <label for="mes">Mes:</label>
         <select name="mes" id="mes" required>
             <?php foreach ($nombresMes as $num => $nombre): ?>
                 <option value="<?= $num ?>" <?= $num == $mesActual ? 'selected' : '' ?>><?= $nombre ?></option>
@@ -140,11 +158,10 @@ $festivosLocMes  = obtenerDiasFestivos($festivosLocales, $mes);
     echo '<input type="hidden" name="fecha" value="' . $fecha . '">';
     echo '<br>';
     echo '<input type="submit" value="Añadir" name="nueva">';
-    echo '</form>';
-
+    echo '</form><br>';
     foreach ($tareas as $clave => $valor) {
         if ($valor["fecha"] == $fecha) {
-            echo $valor["tarea"] . ' <a href="' . htmlspecialchars($_SERVER["PHP_SELF"]) . '?borrar=' . $clave . '&fecha=' . $fecha . '">Borrar</a><br>';
+            echo $valor["tarea"] . ' <a href="del.php?id=' . $clave . '">🗑️</a><br>';
         }
     }
     ?>
